@@ -20,14 +20,14 @@ namespace CodeFirst.DAL
             Initializer.Build();
             optionsBuilder.UseSqlServer(Initializer.Configuration.GetConnectionString("SqlCon"));
         }
-
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Category>().HasMany(x => x.Products).WithOne(x => x.Category).HasForeignKey(x => x.CategoryID);
+
             base.OnModelCreating(modelBuilder);
         }
         
-
         public override int SaveChanges()
         {
             ChangeTracker.Entries().ToList().ForEach(e =>
