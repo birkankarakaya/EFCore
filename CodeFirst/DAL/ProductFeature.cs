@@ -9,6 +9,8 @@ namespace CodeFirst.DAL
     public class ProductFeature
     {
         public int Id { get; set; }
+        public DateTime CreateDate { get; set; }
+        public int CreateUser { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public string Color { get; set; }

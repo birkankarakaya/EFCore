@@ -12,6 +12,8 @@ namespace CodeFirst.DAL
     {
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Teacher> Teachers { get; set; }
+        public DbSet<Student> Students { get; set; }
 
 
 
@@ -24,7 +26,6 @@ namespace CodeFirst.DAL
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Category>().HasMany(x => x.Products).WithOne(x => x.Category).HasForeignKey(x => x.CategoryID);
-
             base.OnModelCreating(modelBuilder);
         }
         
@@ -38,6 +39,22 @@ namespace CodeFirst.DAL
                     {
                         p.CreateDate = DateTime.Now;
                         p.CreateUser = 1;
+                    }
+                }
+                if (e.Entity is ProductFeature pf)
+                {
+                    if (e.State == EntityState.Added)
+                    {
+                        pf.CreateDate = DateTime.Now;
+                        pf.CreateUser = 1;
+                    }
+                }
+                if (e.Entity is Category c)
+                {
+                    if (e.State == EntityState.Added)
+                    {
+                        c.CreateDate = DateTime.Now;
+                        c.CreateUser = 1;
                     }
                 }
             });
