@@ -11,9 +11,8 @@ namespace CodeFirst.DAL
     public class AppDbContext : DbContext
     {
         public DbSet<Product> Products { get; set; }
+        public DbSet<ProductFeature> ProductFeatures { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<Teacher> Teachers { get; set; }
-        public DbSet<Student> Students { get; set; }
 
 
 
@@ -25,39 +24,15 @@ namespace CodeFirst.DAL
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Category>().HasMany(x => x.Products).WithOne(x => x.Category).HasForeignKey(x => x.CategoryID);
+            modelBuilder.Entity<Category>().HasMany(x => x.Products).WithOne(x => x.Category).HasForeignKey(x => x.CategoryID).OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Product>().Property(x => x.PriceKdv).HasComputedColumnSql("[Price]*[Kdv]");
+
             base.OnModelCreating(modelBuilder);
         }
         
         public override int SaveChanges()
         {
-            ChangeTracker.Entries().ToList().ForEach(e =>
-            {
-                if (e.Entity is Product p)
-                {
-                    if (e.State == EntityState.Added)
-                    {
-                        p.CreateDate = DateTime.Now;
-                        p.CreateUser = 1;
-                    }
-                }
-                if (e.Entity is ProductFeature pf)
-                {
-                    if (e.State == EntityState.Added)
-                    {
-                        pf.CreateDate = DateTime.Now;
-                        pf.CreateUser = 1;
-                    }
-                }
-                if (e.Entity is Category c)
-                {
-                    if (e.State == EntityState.Added)
-                    {
-                        c.CreateDate = DateTime.Now;
-                        c.CreateUser = 1;
-                    }
-                }
-            });
             return base.SaveChanges();            
         }
     }
